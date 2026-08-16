@@ -1,0 +1,302 @@
+[
+  {
+    "query": "What approvals are needed before a production deploy?",
+    "role": "Engineering",
+    "ground_truth": "A passing CI pipeline and one approving code review, plus a documented rollback plan.",
+    "expected_source": "deploys.md"
+  },
+  {
+    "query": "How often does on-call rotate?",
+    "role": "Engineering",
+    "ground_truth": "On-call rotates weekly across the platform team.",
+    "expected_source": "oncall.md"
+  },
+  {
+    "query": "Do billing-related PRs need extra review?",
+    "role": "Engineering",
+    "ground_truth": "Yes, PRs touching authentication, billing, or the data pipeline require a second approval from a senior engineer.",
+    "expected_source": "code_review.md"
+  },
+  {
+    "query": "When is a postmortem required after an incident?",
+    "role": "Engineering",
+    "ground_truth": "Within 5 business days of resolving a Sev1 incident.",
+    "expected_source": "incident_response.md"
+  },
+  {
+    "query": "What does the CI/CD pipeline run on every push?",
+    "role": "Engineering",
+    "ground_truth": "Unit tests, integration tests, and a security scan.",
+    "expected_source": "cicd.md"
+  },
+  {
+    "query": "What's the deprecation window for a destructive database migration?",
+    "role": "Engineering",
+    "ground_truth": "A two-week deprecation window is required for destructive migrations.",
+    "expected_source": "db_migrations.md"
+  },
+  {
+    "query": "How long is an API version supported after a new version ships?",
+    "role": "Engineering",
+    "ground_truth": "At least 12 months, with deprecation notices sent 90 days before sunset.",
+    "expected_source": "api_versioning.md"
+  },
+  {
+    "query": "What database does the platform use?",
+    "role": "Engineering",
+    "ground_truth": "PostgreSQL is the primary datastore.",
+    "expected_source": "tech_stack.md"
+  },
+  {
+    "query": "What's the SLA for patching a critical CVE?",
+    "role": "Engineering",
+    "ground_truth": "Critical CVEs must be patched within 72 hours of disclosure.",
+    "expected_source": "security_patching.md"
+  },
+  {
+    "query": "What's the minimum unit test coverage for a new feature?",
+    "role": "Engineering",
+    "ground_truth": "Coverage above 80% for the touched module.",
+    "expected_source": "testing_strategy.md"
+  },
+  {
+    "query": "Can I read the office holiday calendar as an engineer?",
+    "role": "Engineering",
+    "ground_truth": "Yes, the company observes 11 paid holidays annually plus two floating holidays.",
+    "expected_source": "holiday_calendar.md"
+  },
+  {
+    "query": "What are core collaboration hours in the office?",
+    "role": "Engineering",
+    "ground_truth": "10am-4pm local time.",
+    "expected_source": "office_hours.md"
+  },
+  {
+    "query": "When does payroll run each month?",
+    "role": "HR",
+    "ground_truth": "Payroll runs on the last business day of each month via direct deposit.",
+    "expected_source": "payroll.md"
+  },
+  {
+    "query": "How much PTO do full-time employees accrue per year?",
+    "role": "HR",
+    "ground_truth": "18 days per year, accrued monthly, with up to 5 days carrying over.",
+    "expected_source": "leave_policy.md"
+  },
+  {
+    "query": "When is open enrollment for benefits?",
+    "role": "HR",
+    "ground_truth": "Each November, for coverage starting January 1.",
+    "expected_source": "benefits.md"
+  },
+  {
+    "query": "How many remote days are employees allowed per week?",
+    "role": "HR",
+    "ground_truth": "Up to 3 days per week with manager approval.",
+    "expected_source": "remote_work.md"
+  },
+  {
+    "query": "How long is the onboarding program?",
+    "role": "HR",
+    "ground_truth": "A 2-week onboarding program.",
+    "expected_source": "onboarding.md"
+  },
+  {
+    "query": "How often are performance reviews conducted?",
+    "role": "HR",
+    "ground_truth": "Twice yearly, in June and December.",
+    "expected_source": "performance_review.md"
+  },
+  {
+    "query": "How long does expense reimbursement take?",
+    "role": "HR",
+    "ground_truth": "Within 10 business days of submission with a receipt.",
+    "expected_source": "expense_reimbursement.md"
+  },
+  {
+    "query": "How many weeks of parental leave do primary caregivers get?",
+    "role": "HR",
+    "ground_truth": "16 weeks of paid parental leave for primary caregivers.",
+    "expected_source": "parental_leave.md"
+  },
+  {
+    "query": "How can harassment be reported confidentially?",
+    "role": "HR",
+    "ground_truth": "Through the HR portal or the anonymous ethics hotline.",
+    "expected_source": "harassment_policy.md"
+  },
+  {
+    "query": "What is the employee referral bonus amount?",
+    "role": "HR",
+    "ground_truth": "$3,000, split 50/50 between referral submission and the 90-day milestone.",
+    "expected_source": "referral_program.md"
+  },
+  {
+    "query": "Can I check the IT helpdesk contact as an HR employee?",
+    "role": "HR",
+    "ground_truth": "Yes, tickets can be filed via the helpdesk portal or it-support@company.com.",
+    "expected_source": "it_helpdesk.md"
+  },
+  {
+    "query": "What are the cafeteria hours?",
+    "role": "HR",
+    "ground_truth": "Breakfast 7-10am and lunch 11:30am-2pm.",
+    "expected_source": "cafeteria.md"
+  },
+  {
+    "query": "What are the Q3 strategic priorities?",
+    "role": "Executive",
+    "ground_truth": "Expanding mid-market sales, shipping the v2 platform architecture, and closing the Series C round.",
+    "expected_source": "q3_strategy.md"
+  },
+  {
+    "query": "What did the board approve for the FY25 budget?",
+    "role": "Executive",
+    "ground_truth": "A 22% increase in R&D headcount, with customer concentration flagged as a standing risk.",
+    "expected_source": "board_minutes.md"
+  },
+  {
+    "query": "What's in the M&A pipeline right now?",
+    "role": "Executive",
+    "ground_truth": "Two early-stage acquisition targets in the observability tooling space, under NDA.",
+    "expected_source": "ma_pipeline.md"
+  },
+  {
+    "query": "Who sets executive compensation bands?",
+    "role": "Executive",
+    "ground_truth": "The compensation committee, benchmarked against a peer group, annually.",
+    "expected_source": "exec_compensation.md"
+  },
+  {
+    "query": "How is the FY25 budget allocated across departments?",
+    "role": "Executive",
+    "ground_truth": "45% R&D, 25% sales and marketing, 15% G&A, 15% strategic reserve.",
+    "expected_source": "budget_allocation.md"
+  },
+  {
+    "query": "What market is targeted first for international expansion?",
+    "role": "Executive",
+    "ground_truth": "EMEA, starting with a local sales hire and data residency compliance work in Q4.",
+    "expected_source": "market_expansion.md"
+  },
+  {
+    "query": "What is our main competitive differentiation?",
+    "role": "Executive",
+    "ground_truth": "Faster time-to-value and usage-based pricing versus a well-funded incumbent.",
+    "expected_source": "competitive_analysis.md"
+  },
+  {
+    "query": "What are the top risks on the enterprise risk register?",
+    "role": "Executive",
+    "ground_truth": "Customer concentration, key-person dependency, and cloud vendor lock-in.",
+    "expected_source": "risk_management.md"
+  },
+  {
+    "query": "How often do investor updates go out?",
+    "role": "Executive",
+    "ground_truth": "Monthly to the board, quarterly to all shareholders.",
+    "expected_source": "investor_relations.md"
+  },
+  {
+    "query": "Is there a succession plan for the CEO role?",
+    "role": "Executive",
+    "ground_truth": "Yes, succession plans are on file for all C-suite roles, reviewed annually with the board.",
+    "expected_source": "succession_planning.md"
+  },
+  {
+    "query": "As an executive, what approvals are needed for a production deploy?",
+    "role": "Executive",
+    "ground_truth": "A passing CI pipeline and one approving code review, plus a documented rollback plan.",
+    "expected_source": "deploys.md"
+  },
+  {
+    "query": "As an executive, how much PTO do employees accrue?",
+    "role": "Executive",
+    "ground_truth": "18 days per year, accrued monthly.",
+    "expected_source": "leave_policy.md"
+  },
+  {
+    "query": "As an executive, what's the visitor sign-in policy?",
+    "role": "Executive",
+    "ground_truth": "All visitors are signed in at reception, badged, and escorted by their host at all times.",
+    "expected_source": "visitor_policy.md"
+  },
+  {
+    "query": "Where can I park at the office?",
+    "role": "General",
+    "ground_truth": "In the garage on levels 2-4, first-come basis, with EV charging on level 2.",
+    "expected_source": "parking.md"
+  },
+  {
+    "query": "What should I do during a fire alarm?",
+    "role": "General",
+    "ground_truth": "Use the nearest stairwell, proceed to the assembly point, and check in with your floor warden.",
+    "expected_source": "evacuation.md"
+  },
+  {
+    "query": "What is the company mission statement?",
+    "role": "General",
+    "ground_truth": "To make production software observable and trustworthy by default.",
+    "expected_source": "mission_statement.md"
+  },
+  {
+    "query": "How do I book a conference room?",
+    "role": "General",
+    "ground_truth": "Through the shared calendar system; meetings over 2 hours need facilities approval.",
+    "expected_source": "room_booking.md"
+  },
+  {
+    "query": "What are the brand guidelines used for?",
+    "role": "General",
+    "ground_truth": "They specify logo, color palette, and typography for external-facing materials.",
+    "expected_source": "brand_guidelines.md"
+  },
+  {
+    "query": "What's the visitor policy at the office?",
+    "role": "General",
+    "ground_truth": "Visitors sign in at reception, get badged, and are escorted by their host at all times.",
+    "expected_source": "visitor_policy.md"
+  },
+  {
+    "query": "What are the office hours?",
+    "role": "General",
+    "ground_truth": "7am-8pm weekdays with badge access.",
+    "expected_source": "office_hours.md"
+  },
+  {
+    "query": "How many paid holidays does the company observe?",
+    "role": "General",
+    "ground_truth": "11 paid holidays annually plus two floating holidays.",
+    "expected_source": "holiday_calendar.md"
+  },
+  {
+    "query": "How do I contact IT support?",
+    "role": "General",
+    "ground_truth": "File a ticket through the helpdesk portal or email it-support@company.com.",
+    "expected_source": "it_helpdesk.md"
+  },
+  {
+    "query": "What time does the cafeteria serve lunch?",
+    "role": "General",
+    "ground_truth": "11:30am-2pm.",
+    "expected_source": "cafeteria.md"
+  },
+  {
+    "query": "As a General-access employee, can I see the Q3 executive strategy?",
+    "role": "General",
+    "ground_truth": "I don't have enough information to answer that.",
+    "expected_source": null
+  },
+  {
+    "query": "As a General-access employee, can I see the payroll schedule?",
+    "role": "General",
+    "ground_truth": "I don't have enough information to answer that.",
+    "expected_source": null
+  },
+  {
+    "query": "As a General-access employee, can I see engineering's on-call rotation details?",
+    "role": "General",
+    "ground_truth": "I don't have enough information to answer that.",
+    "expected_source": null
+  }
+]

@@ -1,0 +1,202 @@
+[
+  {
+    "acl_role": "Engineering",
+    "source": "deploys.md",
+    "text": "Deployments to production require a passing CI pipeline, one approving code review, and a rollback plan documented in the PR description. Deploys happen Tuesday-Thursday, 10am-4pm, to avoid weekend on-call load."
+  },
+  {
+    "acl_role": "Engineering",
+    "source": "oncall.md",
+    "text": "On-call rotates weekly across the platform team. The on-call engineer carries the pager, triages incoming alerts within 15 minutes, and escalates to the incident commander if a Sev1 is not mitigated within 30 minutes."
+  },
+  {
+    "acl_role": "Engineering",
+    "source": "code_review.md",
+    "text": "Every pull request needs at least one approval before merge. PRs touching authentication, billing, or the data pipeline require a second approval from a senior engineer on that subsystem."
+  },
+  {
+    "acl_role": "Engineering",
+    "source": "incident_response.md",
+    "text": "Sev1 incidents trigger an automatic incident channel, page the on-call engineer and the incident commander, and require a postmortem within 5 business days of resolution."
+  },
+  {
+    "acl_role": "Engineering",
+    "source": "cicd.md",
+    "text": "The CI/CD pipeline runs unit tests, integration tests, and a security scan on every push. Merges to main auto-deploy to staging; production deploys require a manual approval gate."
+  },
+  {
+    "acl_role": "Engineering",
+    "source": "db_migrations.md",
+    "text": "Database migrations must be backward-compatible and reviewed by the data platform team. Destructive migrations (column drops, table drops) require a two-week deprecation window."
+  },
+  {
+    "acl_role": "Engineering",
+    "source": "api_versioning.md",
+    "text": "Public APIs are versioned via the URL path (/v1, /v2). A version is supported for at least 12 months after the next version ships, with deprecation notices sent 90 days before sunset."
+  },
+  {
+    "acl_role": "Engineering",
+    "source": "tech_stack.md",
+    "text": "The core platform runs on Python/FastAPI services, a PostgreSQL primary datastore, Redis for caching, and Kafka for event streaming. The frontend is a Next.js/TypeScript monorepo."
+  },
+  {
+    "acl_role": "Engineering",
+    "source": "security_patching.md",
+    "text": "Critical CVEs affecting production dependencies must be patched within 72 hours of disclosure. High-severity CVEs get a 2-week SLA, and are tracked in the security backlog."
+  },
+  {
+    "acl_role": "Engineering",
+    "source": "testing_strategy.md",
+    "text": "New features require unit test coverage above 80% for the touched module and at least one integration test exercising the primary user flow before merge."
+  },
+  {
+    "acl_role": "HR",
+    "source": "payroll.md",
+    "text": "Payroll runs on the last business day of each month via direct deposit. Pay stubs are available in the HR portal within 24 hours of the pay run."
+  },
+  {
+    "acl_role": "HR",
+    "source": "leave_policy.md",
+    "text": "Full-time employees accrue 18 days of paid time off per year, accrued monthly. Unused PTO up to 5 days carries over into the next calendar year."
+  },
+  {
+    "acl_role": "HR",
+    "source": "benefits.md",
+    "text": "Open enrollment for health, dental, and vision benefits runs each November for coverage starting January 1. New hires have 30 days from their start date to enroll."
+  },
+  {
+    "acl_role": "HR",
+    "source": "remote_work.md",
+    "text": "Employees may work remotely up to 3 days per week with manager approval. Fully remote arrangements require VP-level sign-off and are reviewed annually."
+  },
+  {
+    "acl_role": "HR",
+    "source": "onboarding.md",
+    "text": "New hires complete a 2-week onboarding program covering security training, benefits enrollment, and team-specific ramp-up, tracked via the onboarding checklist in the HR portal."
+  },
+  {
+    "acl_role": "HR",
+    "source": "performance_review.md",
+    "text": "Performance reviews happen twice yearly, in June and December. Each review includes self-assessment, manager assessment, and a calibration session across the team."
+  },
+  {
+    "acl_role": "HR",
+    "source": "expense_reimbursement.md",
+    "text": "Business expenses are reimbursed within 10 business days of submission with a receipt. Expenses over $500 require manager pre-approval."
+  },
+  {
+    "acl_role": "HR",
+    "source": "parental_leave.md",
+    "text": "Primary caregivers receive 16 weeks of paid parental leave; secondary caregivers receive 8 weeks. Leave can be taken continuously or split within the first year."
+  },
+  {
+    "acl_role": "HR",
+    "source": "harassment_policy.md",
+    "text": "The company maintains a zero-tolerance policy for harassment and discrimination. Reports can be filed confidentially through the HR portal or the anonymous ethics hotline."
+  },
+  {
+    "acl_role": "HR",
+    "source": "referral_program.md",
+    "text": "Employees who refer a successful hire receive a $3,000 bonus, paid after the new hire completes 90 days, split 50/50 between referral submission and the 90-day milestone."
+  },
+  {
+    "acl_role": "Executive",
+    "source": "q3_strategy.md",
+    "text": "Q3 strategic priorities are expanding the mid-market sales motion, shipping the v2 platform architecture, and closing the Series C financing round by end of quarter."
+  },
+  {
+    "acl_role": "Executive",
+    "source": "board_minutes.md",
+    "text": "The board approved the FY25 budget with a 22% increase in R&D headcount and flagged customer concentration risk as a standing agenda item for quarterly review."
+  },
+  {
+    "acl_role": "Executive",
+    "source": "ma_pipeline.md",
+    "text": "The M&A pipeline currently includes two early-stage acquisition targets in the observability tooling space, both under NDA and pending due diligence."
+  },
+  {
+    "acl_role": "Executive",
+    "source": "exec_compensation.md",
+    "text": "Executive compensation bands are set annually by the compensation committee, benchmarked against a peer group of similarly-staged companies, and include a base, bonus, and equity component."
+  },
+  {
+    "acl_role": "Executive",
+    "source": "budget_allocation.md",
+    "text": "FY25 budget allocates 45% to R&D, 25% to sales and marketing, 15% to G&A, and 15% held as strategic reserve for opportunistic hiring or acquisitions."
+  },
+  {
+    "acl_role": "Executive",
+    "source": "market_expansion.md",
+    "text": "The market expansion plan targets EMEA as the first international market, with a local sales hire and data residency compliance work starting in Q4."
+  },
+  {
+    "acl_role": "Executive",
+    "source": "competitive_analysis.md",
+    "text": "The primary competitive threat is a well-funded incumbent with broader enterprise distribution; our differentiation is faster time-to-value and usage-based pricing."
+  },
+  {
+    "acl_role": "Executive",
+    "source": "risk_management.md",
+    "text": "The enterprise risk register tracks customer concentration, key-person dependency in the platform team, and vendor lock-in with the primary cloud provider as top risks."
+  },
+  {
+    "acl_role": "Executive",
+    "source": "investor_relations.md",
+    "text": "Investor updates go out monthly to the board and quarterly to all shareholders, covering ARR growth, burn rate, and runway."
+  },
+  {
+    "acl_role": "Executive",
+    "source": "succession_planning.md",
+    "text": "Succession plans are on file for all C-suite roles, reviewed annually with the board, identifying at least one internal and one external potential successor per role."
+  },
+  {
+    "acl_role": "General",
+    "source": "office_hours.md",
+    "text": "The office is open 7am-8pm weekdays with badge access. Core collaboration hours are 10am-4pm local time, when most teams expect availability for meetings."
+  },
+  {
+    "acl_role": "General",
+    "source": "holiday_calendar.md",
+    "text": "The company observes 11 paid holidays annually, published each January in the HR portal, plus two floating holidays employees can schedule at their discretion."
+  },
+  {
+    "acl_role": "General",
+    "source": "it_helpdesk.md",
+    "text": "IT support tickets can be filed through the helpdesk portal or by emailing it-support@company.com. Standard response SLA is 4 business hours."
+  },
+  {
+    "acl_role": "General",
+    "source": "parking.md",
+    "text": "Employee parking is available in the garage on a first-come basis on levels 2-4. EV charging spots are on level 2 and require registration through facilities."
+  },
+  {
+    "acl_role": "General",
+    "source": "cafeteria.md",
+    "text": "The cafeteria serves breakfast 7-10am and lunch 11:30am-2pm, with a rotating weekly menu posted every Monday on the office intranet."
+  },
+  {
+    "acl_role": "General",
+    "source": "mission_statement.md",
+    "text": "The company mission is to make production software observable and trustworthy by default, so teams can ship faster without sacrificing reliability."
+  },
+  {
+    "acl_role": "General",
+    "source": "brand_guidelines.md",
+    "text": "Brand guidelines specify the primary logo, color palette, and typography for all external-facing materials; the design team reviews external decks before publication."
+  },
+  {
+    "acl_role": "General",
+    "source": "room_booking.md",
+    "text": "Conference rooms are booked through the shared calendar system. Meetings longer than 2 hours require facilities approval to hold a room past standard slots."
+  },
+  {
+    "acl_role": "General",
+    "source": "visitor_policy.md",
+    "text": "All visitors must be signed in at reception, badged, and escorted by their host at all times while in the building."
+  },
+  {
+    "acl_role": "General",
+    "source": "evacuation.md",
+    "text": "In case of a fire alarm, use the nearest stairwell (elevators are disabled), proceed to the assembly point across the street, and check in with your floor warden."
+  }
+]

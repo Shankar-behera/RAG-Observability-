@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+
+# Env files with real secrets
+.env
+!.env.example
+
+# Data / generated
+backend/data/
+backend/ci/reports/
+*.sqlite3
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+.env*.local
+
+# OS
+.DS_Store
