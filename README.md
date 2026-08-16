@@ -5,6 +5,9 @@ A full-stack observability platform for RAG pipelines: offline + online evaluati
 vs. permission-layer), multi-tenant ACL-filtered retrieval, and a CI/CD regression
 gate that blocks deploys when faithfulness drops.
 
+See [ARCHITECTURE.md](./ARCHITECTURE.md) for the system diagram, component
+walkthrough, and the reasoning behind the main design decisions.
+
 ## Architecture
 
 ```
@@ -30,7 +33,7 @@ frontend/                     # Next.js dashboard: query debugger + CI regressio
 docker-compose.yml
 ```
 
-## Real
+## Real, no-mock design
 
 - **LLM providers**: OpenAI, DeepSeek, and Ollama all expose an OpenAI-compatible
   `/v1/chat/completions` API, so `app/rag/llm_providers.py` uses one real `openai`
@@ -50,6 +53,29 @@ docker-compose.yml
 - Node.js 20+
 - One of: an OpenAI API key, a DeepSeek API key, or a local [Ollama](https://ollama.com) install
 - Optional: Docker + Docker Compose (for the Postgres/pgvector option)
+- ~5GB free disk space for the first `pip install` — `sentence-transformers` pulls
+  in `torch`, and PyPI's default Linux/Windows wheel bundles full CUDA runtime
+  libraries even though this project only uses the CPU path for embeddings. If
+  you want the much smaller CPU-only build instead, install torch first from the
+  PyTorch CPU index before running `pip install -r requirements.txt`:
+  ```bash
+  pip install torch --index-url https://download.pytorch.org/whl/cpu
+  pip install -r requirements.txt
+  ```
+
+### A note on the dependency pins in `requirements.txt`
+
+`ragas==0.4.3` has a real internal conflict between two of its own transitive
+dependencies: `instructor` (which as of 1.13.0 requires `openai>=2.0`) and
+`langchain-openai` on the 0.3.x line (which requires `openai<2.0`, and is the
+only line compatible with the `langchain-community==0.3.27` version that still
+ships the `langchain_community.chat_models.vertexai` module ragas imports
+unconditionally at startup — newer `langchain-community` removed it, which
+otherwise breaks `import ragas` entirely). `requirements.txt` pins
+`instructor==1.12.0` — the last release before that `openai>=2.0` bump — which
+resolves the whole graph with zero conflicts. Verified with `pip check` and a
+clean-room install. Don't loosen the `instructor`/`langchain-*`/`openai` pins
+independently, or this conflict resurfaces.
 
 ## Quick start (Ollama, local, no API key)
 
