@@ -29,7 +29,7 @@ class Settings(BaseSettings):
     deepseek_model: str = "deepseek-chat"
 
     ollama_base_url: str = "http://localhost:11434/v1"
-    ollama_model: str = "phi3-custom"
+    ollama_model: str = "mistral:latest"
 
     # ---- Embeddings ---------------------------------------------------------------
     # Local sentence-transformers model. Runs on-device, no API key required,
