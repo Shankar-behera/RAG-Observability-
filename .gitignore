@@ -5,6 +5,7 @@ __pycache__/
 .venv/
 venv/
 *.egg-info/
+.venv-py312-test/
 
 # Env files with real secrets
 .env
@@ -23,3 +24,9 @@ out/
 
 # OS
 .DS_Store
+
+# Temporary Python 3.12 validation environment
+backend/.venv-py312-test/
+/.env
+/backend/.env
+!frontend/.env.local.example

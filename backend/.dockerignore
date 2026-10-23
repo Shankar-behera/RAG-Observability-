@@ -4,3 +4,15 @@ __pycache__
 data/
 ci/reports/
 .env
+
+# Exclude secrets and local build artifacts.
+.env.*
+!.env.example
+.venv/
+.venv-*/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.git/

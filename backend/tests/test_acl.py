@@ -83,3 +83,31 @@ def test_unfiltered_audit_query_bypasses_acl_by_design(store):
     q = fake_embed(["deployment question"])[0]
     results = store.query_unfiltered(q, top_k=4)
     assert len(results) == 4
+
+
+def test_metadata_cannot_override_trusted_acl_fields(store):
+    """Caller-supplied metadata must not override trusted ACL or source fields."""
+    doc = Document(
+        id="forged1",
+        text="Engineering doc about deployment",
+        acl_role="HR",
+        source="hr-trusted.md",
+        metadata={
+            "acl_role": "General",
+            "source": "spoofed.md",
+            "department": "finance",
+        },
+    )
+    store.add_documents([doc])
+    q = fake_embed(["deployment question"])[0]
+
+    unfiltered = store.query_unfiltered(q, top_k=10)
+    forged = next(chunk for chunk in unfiltered if chunk.id == "forged1")
+
+    assert forged.acl_role == "HR"
+    assert forged.source == "hr-trusted.md"
+
+    filtered = store.query(
+        q, top_k=10, allowed_roles=["Engineering", "General"]
+    )
+    assert "forged1" not in {chunk.id for chunk in filtered}

@@ -1,12 +1,21 @@
 from __future__ import annotations
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from app.api.security import require_api_access
 
 from app.config import get_settings
 from app.models.schemas import IngestRequest, IngestResponse
 from app.rag.vector_store import Document, get_vector_store, new_id
 
-router = APIRouter(prefix="/ingest", tags=["ingest"])
+router = APIRouter(
+    prefix="/ingest",
+    tags=["ingest"],
+    dependencies=[Depends(require_api_access)],
+    responses={
+        401: {"description": "Missing or invalid API access key."},
+        503: {"description": "API access is not configured."},
+    },
+)
 
 
 @router.post("", response_model=IngestResponse)

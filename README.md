@@ -106,6 +106,22 @@ Open http://localhost:3000 — ask a query as "Engineering", "HR", "Executive", 
 "General" and watch the trace: retrieved chunks, Ragas scores, and root-cause
 classification.
 
+## API access and local deployment security
+
+The backend requires `API_ACCESS_KEY` for `POST /query`, `POST /ingest`, and the `/regression/*` endpoints. The internal `POST /debug/trace` endpoint uses the separate `DEBUG_API_KEY`. Both keys are configured server-side and compared in constant time. Missing server configuration disables protected endpoints.
+
+**Docker Compose:** use the repository-root `.env` file. Generate two different strong values in PowerShell with:
+
+```powershell
+python -c "import secrets; print(secrets.token_urlsafe(32))"
+```
+
+Assign one generated value to API_ACCESS_KEY and a different generated value to DEBUG_API_KEY in the root .env. Do not commit the file or paste its contents into logs or chat. Compose passes the keys to the backend and Next.js server-side proxies. The browser calls same-origin /api/backend/* or /api/debug/trace; the server supplies the relevant key. Never use a NEXT_PUBLIC_ variable for a secret.
+
+Running services directly: configure both keys in backend/.env and frontend/.env.local. Set INTERNAL_API_URL=http://localhost:8000 in the frontend environment.
+
+Compose publishes service ports only on 127.0.0.1 by default. Keep these bindings for local development. Same-origin checks help mitigate browser-based cross-origin requests, but they are not user authentication. The local proxy uses a shared service key and is not a substitute for login, sessions, rate limiting, TLS, and appropriate deployment controls if you expose the web application to other users.
+
 ## Using OpenAI or DeepSeek instead
 
 Edit `backend/.env`:

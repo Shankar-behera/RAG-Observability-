@@ -46,6 +46,9 @@ class Settings(BaseSettings):
     pg_table: str = "rag_documents"
 
     # ---- App / CI ---------------------------------------------------------------
+    # Dedicated access key for the internal debug trace endpoint.
+    api_access_key: str | None = None
+    debug_api_key: str | None = None
     top_k: int = 4
     faithfulness_gate: float = 0.85
     cors_origins: str = "http://localhost:3000"

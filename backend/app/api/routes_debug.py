@@ -1,6 +1,8 @@
 from __future__ import annotations
 
-from fastapi import APIRouter, HTTPException
+import hmac
+
+from fastapi import APIRouter, Depends, Header, HTTPException
 
 from app.config import get_settings
 from app.eval.failure_classifier import audit_permissions, classify
@@ -11,21 +13,47 @@ from app.rag.pipeline import RAGPipeline
 router = APIRouter(prefix="/debug", tags=["debug"])
 
 
+def require_debug_access(
+    x_debug_api_key: str | None = Header(default=None, alias="X-Debug-API-Key"),
+) -> None:
+    configured_key = get_settings().debug_api_key
+    if not configured_key or not configured_key.strip():
+        raise HTTPException(
+            status_code=503,
+            detail="Debug endpoint is disabled because access is not configured.",
+        )
+
+    configured_key = configured_key.strip()
+
+    if x_debug_api_key is None or not hmac.compare_digest(
+        x_debug_api_key.encode("utf-8"), configured_key.encode("utf-8")
+    ):
+        raise HTTPException(status_code=401, detail="Invalid or missing debug API key.")
+
+
 def _chunk_out(chunks) -> list[RetrievedChunkOut]:
     return [RetrievedChunkOut(id=c.id, text=c.text, acl_role=c.acl_role, source=c.source, score=c.score) for c in chunks]
 
 
-@router.post("/trace", response_model=DebugTraceResponse)
+@router.post(
+    "/trace",
+    response_model=DebugTraceResponse,
+    dependencies=[Depends(require_debug_access)],
+    responses={
+        401: {"description": "Missing or invalid debug API key."},
+        503: {"description": "Debug endpoint is disabled because access is not configured."},
+    },
+)
 async def debug_trace(req: DebugTraceRequest) -> DebugTraceResponse:
     settings = get_settings()
     pipeline = RAGPipeline(settings)
 
     try:
         trace = pipeline.run(req.query, req.role, top_k=req.top_k)
-    except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid debug trace request.")
     except Exception as e:
-        raise HTTPException(status_code=502, detail=f"LLM provider call failed: {e}")
+        raise HTTPException(status_code=502, detail="LLM provider call failed.")
 
     # If retrieval is empty (e.g. a permission failure blocked everything),
     # faithfulness/context precision are meaningless -- short-circuit straight
@@ -36,7 +64,7 @@ async def debug_trace(req: DebugTraceRequest) -> DebugTraceResponse:
         return DebugTraceResponse(
             query=trace.query, role=trace.role, answer=trace.answer,
             retrieved_chunks=_chunk_out(trace.retrieved_chunks),
-            unfiltered_top_chunks=_chunk_out(trace.unfiltered_top_chunks),
+            unfiltered_top_chunks=[],
             faithfulness=0.0, answer_relevancy=0.0, context_precision=0.0, context_recall=None,
             root_cause=report.root_cause.value, reasons=report.reasons,
             permission_blocked_doc_ids=report.permission_blocked_doc_ids or [],
@@ -50,7 +78,7 @@ async def debug_trace(req: DebugTraceRequest) -> DebugTraceResponse:
         )
         result = await evaluator.evaluate_sample(sample)
     except Exception as e:
-        raise HTTPException(status_code=502, detail=f"Ragas evaluation call failed: {e}")
+        raise HTTPException(status_code=502, detail="Evaluation failed.")
 
     report = classify(
         trace, faithfulness=result.faithfulness, context_precision=result.context_precision,
@@ -60,7 +88,7 @@ async def debug_trace(req: DebugTraceRequest) -> DebugTraceResponse:
     return DebugTraceResponse(
         query=trace.query, role=trace.role, answer=trace.answer,
         retrieved_chunks=_chunk_out(trace.retrieved_chunks),
-        unfiltered_top_chunks=_chunk_out(trace.unfiltered_top_chunks),
+        unfiltered_top_chunks=[],
         faithfulness=result.faithfulness, answer_relevancy=result.answer_relevancy,
         context_precision=result.context_precision, context_recall=result.context_recall,
         root_cause=report.root_cause.value, reasons=report.reasons,

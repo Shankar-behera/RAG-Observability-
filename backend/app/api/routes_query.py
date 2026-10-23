@@ -1,12 +1,21 @@
 from __future__ import annotations
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
+from app.api.security import require_api_access
 
 from app.config import get_settings
 from app.models.schemas import QueryRequest, QueryResponse, RetrievedChunkOut
 from app.rag.pipeline import RAGPipeline
 
-router = APIRouter(prefix="/query", tags=["query"])
+router = APIRouter(
+    prefix="/query",
+    tags=["query"],
+    dependencies=[Depends(require_api_access)],
+    responses={
+        401: {"description": "Missing or invalid API access key."},
+        503: {"description": "API access is not configured."},
+    },
+)
 
 
 @router.post("", response_model=QueryResponse)
@@ -15,12 +24,23 @@ def run_query(req: QueryRequest) -> QueryResponse:
     pipeline = RAGPipeline(settings)
     try:
         trace = pipeline.run(req.query, req.role, top_k=req.top_k)
-    except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
-    except Exception as e:
-        # Real upstream failures (LLM provider unreachable, auth error, etc.)
-        # surface as a 502 rather than a silently-generated fake answer.
-        raise HTTPException(status_code=502, detail=f"LLM provider call failed: {e}")
+    except ValueError as exc:
+        # Preserve a safe validation message without returning arbitrary exception text.
+        if str(exc).startswith("Unknown role"):
+            raise HTTPException(
+                status_code=400,
+                detail="Unknown role.",
+            ) from None
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid query request.",
+        ) from None
+    except Exception:
+        # Keep upstream failure details out of client-visible responses.
+        raise HTTPException(
+            status_code=502,
+            detail="LLM provider call failed.",
+        ) from None
 
     return QueryResponse(
         query=trace.query,

@@ -1,3 +1,13 @@
 node_modules
 .next
 .env*.local
+
+# Exclude secrets and local build artifacts.
+.env
+.env.*
+!.env.example
+node_modules/
+.next/
+out/
+coverage/
+.git/

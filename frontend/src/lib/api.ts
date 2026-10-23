@@ -1,4 +1,3 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 export type Role = "Engineering" | "HR" | "Executive" | "General";
 
@@ -75,7 +74,8 @@ class ApiError extends Error {
 }
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
-  const res = await fetch(`${API_URL}${path}`, {
+  const requestUrl = path === "/debug/trace" ? "/api/debug/trace" : `/api/backend${path}`;
+  const res = await fetch(requestUrl, {
     ...options,
     headers: { "Content-Type": "application/json", ...(options?.headers || {}) },
   });

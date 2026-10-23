@@ -69,7 +69,7 @@ class ChromaBackend:
             ids=[d.id for d in docs],
             documents=[d.text for d in docs],
             embeddings=embeddings,
-            metadatas=[{"acl_role": d.acl_role, "source": d.source, **d.metadata} for d in docs],
+            metadatas=[{**d.metadata, "acl_role": d.acl_role, "source": d.source} for d in docs],
         )
 
     def _query(self, query_embedding: list[float], top_k: int, where: dict | None) -> list[RetrievedChunk]:
