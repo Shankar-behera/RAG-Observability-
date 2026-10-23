@@ -10,6 +10,10 @@ on:
     branches: [main]
     paths:
       - "backend/**"
+      - ".github/workflows/rag-regression.yml"   # P0: PRs changing the workflow itself must run it
+
+permissions:
+  contents: read                                  # P2: least privilege by default
 
 jobs:
   regression:
@@ -30,15 +34,56 @@ jobs:
         working-directory: backend
         run: pip install -r requirements.txt
 
-      # Real local LLM in CI: no API key needed/leaked in a fork PR context.
-      # Swap this step out (and set OPENAI_API_KEY / DEEPSEEK_API_KEY as a repo
-      # secret + LLM_PROVIDER env below) if you'd rather gate against a hosted model.
+      # Handle systemd-managed and non-systemd Ollama installations.
+      # Avoid starting a second server if the installer already started one.
       - name: Install and start Ollama
         run: |
           curl -fsSL https://ollama.com/install.sh | sh
-          ollama serve &
-          sleep 5
-          ollama pull mistral
+
+          system_state="$(systemctl is-system-running 2>/dev/null || true)"
+          service_managed=0
+
+          if { [ "$system_state" = "running" ] || [ "$system_state" = "degraded" ]; } \
+            && systemctl cat ollama >/dev/null 2>&1; then
+            service_managed=1
+            if ! sudo systemctl is-active --quiet ollama; then
+              sudo systemctl start ollama
+            fi
+          fi
+
+          # Fallback only when no usable systemd service is available.
+          if [ "$service_managed" -ne 1 ]; then
+            if ! curl -fsS http://127.0.0.1:11434/api/tags >/dev/null 2>&1; then
+              nohup ollama serve > "$RUNNER_TEMP/ollama.log" 2>&1 &
+            fi
+          fi
+
+          ready=0
+          for i in $(seq 1 60); do
+            if curl -fsS http://127.0.0.1:11434/api/tags >/dev/null 2>&1; then
+              echo "Ollama is ready (attempt $i/60)"
+              ready=1
+              break
+            fi
+            echo "Waiting for Ollama... ($i/60)"
+            sleep 1
+          done
+
+          if [ "$ready" -ne 1 ]; then
+            echo "ERROR: Ollama did not become ready within 60 seconds."
+            if command -v systemctl >/dev/null 2>&1; then
+              sudo systemctl status ollama --no-pager || true
+            fi
+            if [ -f "$RUNNER_TEMP/ollama.log" ]; then
+              tail -n 60 "$RUNNER_TEMP/ollama.log"
+            fi
+            exit 1
+          fi
+      # P0: the pull tag and OLLAMA_MODEL must be the exact same string.
+      # Official phi3 tags are :mini and :medium; there is no :lite.
+      # Keeping mistral preserves your existing download and baseline.
+      - name: Pull regression model
+        run: ollama pull mistral
 
       - name: Run unit + ACL + failure-classifier tests
         working-directory: backend
@@ -51,13 +96,13 @@ jobs:
         env:
           LLM_PROVIDER: ollama
           OLLAMA_BASE_URL: http://localhost:11434/v1
-          OLLAMA_MODEL: phi3:lite
+          OLLAMA_MODEL: mistral        # must match the pull tag above exactly
           VECTOR_STORE: chroma
           FAITHFULNESS_GATE: "0.85"
         run: python ci/run_regression.py
 
       - name: Upload regression report
-        if: always()
+        if: always()                   # uploads even when the gate fails
         uses: actions/upload-artifact@v4
         with:
           name: regression-report
